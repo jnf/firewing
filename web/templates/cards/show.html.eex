@@ -1,0 +1,4 @@
+<div class="jumbotron">
+  <%# @id is sugar for Dict.get(assigns, :id) %>
+  <h2>Hello World, from <%= @id %>!</h2>
+</div>

@@ -8,33 +8,29 @@
     <meta name="author" content="">
 
     <title>Firewing: Collecting stuff</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="stylesheet" href="<%= static_path @conn, "/css/app.css" %>">
   </head>
 
   <body>
-    <div class="container">
-      <header class="header">
-        <nav role="navigation">
-          <ul class="nav nav-pills pull-right">
-          </ul>
-        </nav>
-        <span class="logo"></span>
-      </header>
+    <header class="header">
+      <nav role="navigation">
+        <a href="<%= page_path @conn, :index %>">Home</a>
+      </nav>
+    </header>
 
-      <% info  = get_flash @conn, :info %>
-      <% error = get_flash @conn, :error %>
-      <% if info || error do %>
-        <div class="alert">
-          <% if info do %><p class="alert-info" role="alert"><%= get_flash(@conn, :info) %></p><% end %>
-          <% if error do %><p class="alert-danger" role="alert"><%= get_flash(@conn, :error) %></p><% end %>
-        </div>
-      <% end %>
+    <% info  = get_flash @conn, :info %>
+    <% error = get_flash @conn, :error %>
+    <% if info || error do %>
+      <div class="alert">
+        <% if info do %><p class="alert-info" role="alert"><%= get_flash(@conn, :info) %></p><% end %>
+        <% if error do %><p class="alert-danger" role="alert"><%= get_flash(@conn, :error) %></p><% end %>
+      </div>
+    <% end %>
 
-      <main role="main">
-        <%= render @view_module, @view_template, assigns %>
-      </main>
+    <main role="main">
+      <%= render @view_module, @view_template, assigns %>
+    </main>
 
-    </div>
     <script src="<%= static_path @conn, "/js/app.js" %>"></script>
   </body>
 </html>

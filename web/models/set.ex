@@ -14,8 +14,8 @@ defmodule Firewing.Set do
     timestamps
   end
 
-  @required_fields ~w(code name type border mkm_id mkm_name magicCardsInfoCode releaseDate)
-  @optional_fields ~w()
+  @required_fields ~w(code)
+  @optional_fields ~w(name type border mkm_id mkm_name magicCardsInfoCode releaseDate)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -26,5 +26,20 @@ defmodule Firewing.Set do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
+    |> unique_constraint(:code)
+  end
+
+  def from_code(code) do
+    q = from s in Firewing.Set, where: s.code == ^code
+    set = Firewing.Repo.one(q)
+
+    if is_nil(set) do
+      # insert the record so we can continue
+      {:ok, set} = Firewing.Repo.insert(%Firewing.Set{code: code})
+
+      # schedule to get the rest of the data from the mtg api
+    end
+
+    set
   end
 end

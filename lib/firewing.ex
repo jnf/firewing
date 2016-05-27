@@ -12,6 +12,7 @@ defmodule Firewing do
       # Start the Ecto repository
       supervisor(Firewing.Repo, []),
       # Here you could define other workers and supervisors as children
+      supervisor(Task.Supervisor, [[name: Firewing.APITasks]])
       # worker(Firewing.Worker, [arg1, arg2, arg3]),
     ]
 

@@ -3,7 +3,7 @@ defmodule Firewing.CardTest do
 
   alias Firewing.Card
 
-  @valid_attrs %{multiverseid: 42, name: "some content"}
+  @valid_attrs %{multiverseid: 42, name: "some content", set_id: 1}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

@@ -35,7 +35,7 @@ defmodule Firewing.Card do
     timestamps
   end
 
-  @required_fields ~w(multiverseid name set)
+  @required_fields ~w(multiverseid name set_id)
   @optional_fields ~w()
 
   @doc """

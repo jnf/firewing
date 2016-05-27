@@ -3,7 +3,7 @@ defmodule Firewing.CollectionTest do
 
   alias Firewing.Collection
 
-  @valid_attrs %{}
+  @valid_attrs %{name: "some content"}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

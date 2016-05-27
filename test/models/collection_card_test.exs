@@ -3,7 +3,7 @@ defmodule Firewing.CollectionCardTest do
 
   alias Firewing.CollectionCard
 
-  @valid_attrs %{}
+  @valid_attrs %{collection_id: 1, card_id: 1, qty: 1}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

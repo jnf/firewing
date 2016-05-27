@@ -30,16 +30,23 @@ defmodule Firewing.Set do
   end
 
   def from_code(code) do
-    q = from s in Firewing.Set, where: s.code == ^code
+    q = from s in Firewing.Set, where: s.code == ^String.upcase(code)
     set = Firewing.Repo.one(q)
 
     if is_nil(set) do
       # insert the record so we can continue
-      {:ok, set} = Firewing.Repo.insert(%Firewing.Set{code: code})
+      {:ok, set} = Firewing.Repo.insert(%Firewing.Set{code: String.upcase(code)})
 
-      # schedule to get the rest of the data from the mtg api
+      # kick off an async task to handle getting the rest of the set data
+      {:ok, pid} = Task.Supervisor.start_child(Firewing.APITasks, fn -> Firewing.Set.fetch_set_data(set) end)
     end
 
     set
+  end
+
+  def fetch_set_data(set) do
+    set_data  = Firewing.MtG.get_set_data!(set.code)
+    changeset = Firewing.Set.changeset(set, set_data)
+    Firewing.Repo.update(changeset)
   end
 end

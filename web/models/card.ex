@@ -11,9 +11,9 @@ defmodule Firewing.Card do
     field :name, :string
     field :manaCost, :string
     field :cmc, :integer
-    field :colors, :string
     field :type, :string
-    field :types, :string
+    field :types, { :array, :string }
+    field :colors, { :array, :string }
     field :supertypes, { :array, :string }
     field :subtypes,   { :array, :string }
     field :rarity, :string

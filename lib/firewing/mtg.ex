@@ -13,21 +13,20 @@ defmodule Firewing.MtG do
   end
 
   def get_set_data!(code) do
-    get!("sets/#{code}").body
-    |> Poison.decode!
-    |> Map.fetch("set")
-    |> elem(1)
-    |> Map.take(@set_fields)
+    with body <- get!("sets/#{code}").body,
+         {:ok, json} <- Poison.decode(body),
+         {:ok, set}  <- Map.fetch(json, "set"),
+         do: Map.take(set, @set_fields)
   end
 
   def get_card_data!(set, num) do
-    card = get!("/cards/?set=#{set}&number=#{num}").body
-    |> Poison.decode!
-    |> Map.fetch("cards")
-    |> elem(1)
-    |> List.first
-
-
-    Map.take((card || %{}), @card_fields)
+    with body <- get!("/cards/?set=#{set}&number=#{num}").body,
+         {:ok, json}  <- Poison.decode(body),
+         {:ok, cards} <- Map.fetch(json, "cards"),
+         {:ok, card}  <- get_card_from(cards),
+         do: Map.take(card, @card_fields)
   end
+
+  defp get_card_from([]), do: :error
+  defp get_card_from([card|_]), do: {:ok, card}
 end

@@ -2,7 +2,11 @@ defmodule Firewing.MtG do
   use HTTPoison.Base
 
   @set_fields  ~w(code name type border mkm_id mkm_name magicCardsInfoCode releaseDate)
-  @card_fields ~w(name set text type types number multiverseid)
+  @card_fields ~w(
+    name text type types number multiverseid imageUrl cmc colors manaCost rarity
+    supertypes subtypes artist power toughness layout watermark rulings
+    foreignNames printings originalText originalType legalities
+  )
 
   def process_url(url) do
     "https://api.magicthegathering.io/v1/" <> url

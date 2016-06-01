@@ -1,7 +1,8 @@
 defmodule Firewing.MtG do
   use HTTPoison.Base
 
-  @set_fields ~w(code name type border mkm_id mkm_name magicCardsInfoCode releaseDate)
+  @set_fields  ~w(code name type border mkm_id mkm_name magicCardsInfoCode releaseDate)
+  @card_fields ~w(name set text type types number multiverseid)
 
   def process_url(url) do
     "https://api.magicthegathering.io/v1/" <> url
@@ -13,5 +14,16 @@ defmodule Firewing.MtG do
     |> Map.fetch("set")
     |> elem(1)
     |> Map.take(@set_fields)
+  end
+
+  def get_card_data!(set, num) do
+    card = get!("/cards/?set=#{set}&number=#{num}").body
+    |> Poison.decode!
+    |> Map.fetch("cards")
+    |> elem(1)
+    |> List.first
+
+
+    Map.take((card || %{}), @card_fields)
   end
 end

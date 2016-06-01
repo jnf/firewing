@@ -30,18 +30,24 @@ defmodule Firewing.Set do
   end
 
   def from_code(code) do
-    q = from s in Firewing.Set, where: s.code == ^String.upcase(code)
-    set = Firewing.Repo.one(q)
+    code = String.upcase code
+    q = from s in Firewing.Set, where: s.code == ^code
 
-    if is_nil(set) do
-      # insert the record so we can continue
-      {:ok, set} = Firewing.Repo.insert(%Firewing.Set{code: String.upcase(code)})
-
-      # kick off an async task to handle getting the rest of the set data
-      {:ok, pid} = Task.Supervisor.start_child(Firewing.APITasks, fn -> Firewing.Set.fetch_set_data(set) end)
+    case Firewing.Repo.one(q) do
+      nil -> resolve_set(code)
+      set -> {:ok, set}
     end
+  end
 
-    set
+  def resolve_set(code) do
+    # insert record
+    {:ok, set} = Firewing.Repo.insert(%Firewing.Set{code: code})
+
+    # kick off an async task to handle getting the rest of the set data
+    {:ok, pid} = Task.Supervisor.start_child(Firewing.APITasks, fn -> Firewing.Set.fetch_set_data(set) end)
+
+    # return a tuple indicating that the set is potentially unresolved
+    {:unresolved, set}
   end
 
   def fetch_set_data(set) do
